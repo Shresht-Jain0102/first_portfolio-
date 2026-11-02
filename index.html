@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shresht Jain — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --white: #fafafa;
+      --off-white: #f0f0f0;
+      --light-gray: #e0e0e0;
+      --mid-gray: #888;
+      --dark-gray: #222;
+      --black: #0a0a0a;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --ease: cubic-bezier(.25, .46, .45, .94);
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background: var(--black);
+      color: var(--white);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ===== Utility ===== */
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ===== Reveal Animation ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: .12s; }
+    .reveal-delay-2 { transition-delay: .24s; }
+    .reveal-delay-3 { transition-delay: .36s; }
+    .reveal-delay-4 { transition-delay: .48s; }
+
+    /* ===== Navigation ===== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 1.5rem 0;
+      transition: background .4s var(--ease), padding .4s var(--ease), backdrop-filter .4s var(--ease);
+    }
+    nav.scrolled {
+      background: rgba(10, 10, 10, .85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: .9rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    .logo span { font-style: italic; font-weight: 400; }
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+    }
+    .nav-links a {
+      font-size: .8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--white);
+      transition: width .35s var(--ease);
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1001;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .menu-toggle span {
+      width: 24px;
+      height: 1.5px;
+      background: var(--white);
+      transition: transform .3s var(--ease), opacity .3s var(--ease);
+    }
+    .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 4px); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -4px); }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 6rem 1rem 4rem;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(255,255,255,.03) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.02) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-label {
+      font-size: .75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      color: var(--mid-gray);
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 400;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      letter-spacing: -.02em;
+    }
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 400;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--mid-gray);
+      font-weight: 300;
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 1rem 2.4rem;
+      transition: background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+    }
+    .hero-cta:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+    .hero-cta svg {
+      width: 14px;
+      height: 14px;
+      transition: transform .35s var(--ease);
+    }
+    .hero-cta:hover svg { transform: translateY(3px); }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .scroll-indicator span {
+      display: block;
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--white), transparent);
+      animation: scrollPulse 2s infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: .3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    /* ===== Section Shared ===== */
+    section {
+      padding: 8rem 0;
+      position: relative;
+    }
+    .section-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,.2);
+      margin-bottom: 3rem;
+    }
+    .section-label {
+      font-size: .7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: var(--mid-gray);
+      margin-bottom: .8rem;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      line-height: 1.2;
+    }
+
+    /* ===== About ===== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: rgba(255,255,255,.7);
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+    .about-text p:first-of-type::first-letter {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      float: left;
+      line-height: 1;
+      margin-right: .5rem;
+      margin-top: .1rem;
+      color: var(--white);
+    }
+    .about-details {
+      border-left: 1px solid rgba(255,255,255,.1);
+      padding-left: 3rem;
+    }
+    .detail-item {
+      margin-bottom: 2rem;
+    }
+    .detail-item h4 {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--mid-gray);
+      margin-bottom: .4rem;
+    }
+    .detail-item p {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    /* ===== Skills ===== */
+    .skills { background: var(--dark-gray); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .skill-card {
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 2.5rem;
+      transition: border-color .35s var(--ease), transform .35s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,.03), transparent);
+      opacity: 0;
+      transition: opacity .35s var(--ease);
+    }
+    .skill-card:hover {
+      border-color: rgba(255,255,255,.2);
+      transform: translateY(-4px);
+    }
+    .skill-card:hover::before { opacity: 1; }
+    .skill-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      margin-bottom: .8rem;
+      position: relative;
+    }
+    .skill-card p {
+      font-size: .9rem;
+      color: rgba(255,255,255,.6);
+      font-weight: 300;
+      position: relative;
+      line-height: 1.7;
+    }
+    .skill-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      opacity: .7;
+    }
+    .skill-bar-track {
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,.1);
+      margin-top: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: var(--white);
+      width: 0;
+      transition: width 1.2s var(--ease-out);
+    }
+    .skill-card.visible .skill-bar-fill { width: var(--fill); }
+
+    /* ===== Creative Work ===== */
+    .creative-intro {
+      max-width: 600px;
+      color: rgba(255,255,255,.6);
+      font-size: 1.05rem;
+      font-weight: 300;
+      margin-bottom: 4rem;
+    }
+    .creative-category {
+      margin-bottom: 5rem;
+    }
+    .creative-category:last-child { margin-bottom: 0; }
+    .category-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding-bottom: 1rem;
+    }
+    .category-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+    }
+    .category-header span {
+      font-size: .75rem;
+      color: var(--mid-gray);
+      text-transform: uppercase;
+      letter-spacing: .15em;
+    }
+    .gallery {
+      display: grid;
+      gap: 1rem;
+    }
+    .gallery-3 { grid-template-columns: repeat(3, 1fr); }
+    .gallery-2-1 { grid-template-columns: 2fr 1fr; }
+    .gallery-1-2 { grid-template-columns: 1fr 2fr; }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--dark-gray);
+      cursor: pointer;
+    }
+    .gallery-item.tall { aspect-ratio: 3/4; }
+    .gallery-item.wide { aspect-ratio: 16/9; }
+
+    .gallery-item-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      transition: transform .6s var(--ease);
+    }
+    .gallery-item:hover .gallery-item-inner {
+      transform: scale(1.03);
+    }
+
+    .gallery-placeholder-icon {
+      font-size: 2rem;
+      opacity: .2;
+      transition: opacity .35s var(--ease);
+    }
+    .gallery-item:hover .gallery-placeholder-icon { opacity: .35; }
+
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(10,10,10,.85), transparent);
+      transform: translateY(100%);
+      transition: transform .4s var(--ease);
+    }
+    .gallery-item:hover .gallery-overlay { transform: translateY(0); }
+    .gallery-overlay h4 {
+      font-size: .85rem;
+      font-weight: 500;
+      margin-bottom: .2rem;
+    }
+    .gallery-overlay p {
+      font-size: .7rem;
+      color: var(--mid-gray);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    /* ===== Interests ===== */
+    .interests { background: var(--dark-gray); }
+    .interests-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .interest-card {
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .35s var(--ease);
+    }
+    .interest-card:hover { border-color: rgba(255,255,255,.18); }
+    .interest-card::after {
+      content: '';
+      position: absolute;
+      top: -50%; right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,.02), transparent 70%);
+      opacity: 0;
+      transition: opacity .5s var(--ease);
+    }
+    .interest-card:hover::after { opacity: 1; }
+    .interest-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .interest-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      margin-bottom: .8rem;
+      position: relative;
+      z-index: 1;
+    }
+    .interest-card p {
+      color: rgba(255,255,255,.55);
+      font-size: .9rem;
+      font-weight: 300;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Contact ===== */
+    .contact { text-align: center; }
+    .contact .section-divider,
+    .contact .section-label { margin-inline: auto; }
+    .contact-text {
+      max-width: 480px;
+      margin: 0 auto 3rem;
+      color: rgba(255,255,255,.6);
+      font-size: 1.05rem;
+      font-weight: 300;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .9rem 1.8rem;
+      border: 1px solid rgba(255,255,255,.15);
+      font-size: .8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease);
+    }
+    .contact-link:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+      transform: translateY(-2px);
+    }
+    .contact-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 3rem 0;
+      text-align: center;
+    }
+    footer p {
+      font-size: .75rem;
+      color: var(--mid-gray);
+      letter-spacing: .05em;
+    }
+    footer .footer-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: .8rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .about-details {
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,.1);
+        padding-left: 0;
+        padding-top: 2rem;
+      }
+      .gallery-3, .gallery-2-1, .gallery-1-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .interests-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      section { padding: 5rem 0; }
+
+      .nav-links {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100vh;
+        background: rgba(10,10,10,.97);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .4s var(--ease);
+      }
+      .nav-links.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .nav-links a { font-size: 1rem; letter-spacing: .15em; }
+      .menu-toggle { display: flex; }
+
+      .gallery-3, .gallery-2-1, .gallery-1-2 {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 { font-size: clamp(2.5rem, 10vw, 4rem); }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Navigation ===== -->
+  <nav id="navbar">
+    <div class="container">
+      <a href="#hero" class="logo">S<span>J</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about" onclick="closeMenu()">About</a>
+        <a href="#skills" onclick="closeMenu()">Skills</a>
+        <a href="#creative" onclick="closeMenu()">Work</a>
+        <a href="#interests" onclick="closeMenu()">Interests</a>
+        <a href="#contact" onclick="closeMenu()">Contact</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <p class="hero-label reveal">Student · Creator · Explorer</p>
+      <h1 class="reveal reveal-delay-1">Shresht<br /><em>Jain</em></h1>
+      <p class="hero-tagline reveal reveal-delay-2">
+        First-year student at NST, Rishihood University — navigating the intersection of technology, visual storytelling, and creative expression.
+      </p>
+      <a href="#creative" class="hero-cta reveal reveal-delay-3">
+        View My Work
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </a>
+    </div>
+    <div class="scroll-indicator">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section id="about">
+    <div class="container">
+      <div class="section-divider reveal"></div>
+      <p class="section-label reveal">About Me</p>
+      <h2 class="section-title reveal reveal-delay-1">Building perspectives,<br />one frame at a time.</h2>
+      <div class="about-grid">
+        <div class="about-text reveal reveal-delay-2">
+          <p>Currently in my first year at NST, Rishihood University, I'm driven by an insatiable curiosity about how technology and creativity intersect. Every project I take on is an opportunity to learn, experiment, and push boundaries.</p>
+          <p>When I'm not coding or studying, you'll find me behind a camera — framing moments, chasing light, and telling stories through visuals. I believe the best work comes from combining technical precision with artistic intuition.</p>
+          <p>I approach everything with a beginner's mind and a builder's discipline, knowing that the most meaningful creations come from patience and genuine passion.</p>
+        </div>
+        <div class="about-details reveal reveal-delay-3">
+          <div class="detail-item">
+            <h4>Name</h4>
+            <p>Shresht Jain</p>
+          </div>
+          <div class="detail-item">
+            <h4>University</h4>
+            <p>NST, Rishihood University</p>
+          </div>
+          <div class="detail-item">
+            <h4>Year</h4>
+            <p>First Year</p>
+          </div>
+          <div class="detail-item">
+            <h4>Focus</h4>
+            <p>Technology & Visual Arts</p>
+          </div>
+          <div class="detail-item">
+            <h4>Location</h4>
+            <p>India</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Skills ===== -->
+  <section class="skills" id="skills">
+    <div class="container">
+      <div class="section-divider reveal"></div>
+      <p class="section-label reveal">Skills & Tools</p>
+      <h2 class="section-title reveal reveal-delay-1">Crafting with code<br />& curiosity.</h2>
+      <div class="skills-grid">
+        <div class="skill-card reveal reveal-delay-1">
+          <div class="skill-icon">⟨/⟩</div>
+          <h3>Python</h3>
+          <p>Building a solid foundation in programming — from scripting and automation to exploring data structures and problem-solving.</p>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" style="--fill: 60%"></div>
+          </div>
+        </div>
+        <div class="skill-card reveal reveal-delay-2">
+          <div class="skill-icon">◎</div>
+          <h3>Visual Storytelling</h3>
+          <p>Photography, videography, and cinematography — composing narratives through intentional framing, lighting, and movement.</p>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" style="--fill: 75%"></div>
+          </div>
+        </div>
+        <div class="skill-card reveal reveal-delay-3">
+          <div class="skill-icon">△</div>
+          <h3>Creative Exploration</h3>
+          <p>Continuously learning new tools, frameworks, and creative techniques — embracing the journey of growth and discovery.</p>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" style="--fill: 50%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Creative Work ===== -->
+  <section id="creative">
+    <div class="container">
+      <div class="section-divider reveal"></div>
+      <p class="section-label reveal">Creative Work</p>
+      <h2 class="section-title reveal reveal-delay-1">Frames, motion<br />& visual narratives.</h2>
+      <p class="creative-intro reveal reveal-delay-2">A curated selection of my work across photography, videography, and cinematography — each piece a study in composition, mood, and perspective.</p>
+
+      <!-- Photography -->
+      <div class="creative-category reveal">
+        <div class="category-header">
+          <h3>Photography</h3>
+          <span>Stills & Composition</span>
+        </div>
+        <div class="gallery gallery-2-1">
+          <div class="gallery-item wide">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">📷</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Urban Geometry</h4>
+              <p>Architecture Study</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">📷</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Light & Shadow</h4>
+              <p>Natural Light Series</p>
+            </div>
+          </div>
+        </div>
+        <div class="gallery gallery-3" style="margin-top: 1rem;">
+          <div class="gallery-item">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">📷</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Still Life</h4>
+              <p>Minimalist</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">📷</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Perspectives</h4>
+              <p>Street Photography</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">📷</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Texture</h4>
+              <p>Macro Details</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videography -->
+      <div class="creative-category reveal">
+        <div class="category-header">
+          <h3>Videography</h3>
+          <span>Motion & Story</span>
+        </div>
+        <div class="gallery gallery-1-2">
+          <div class="gallery-item tall">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">🎬</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Vertical Reel</h4>
+              <p>Short Form Content</p>
+            </div>
+          </div>
+          <div class="gallery-item wide">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">🎬</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Motion Study</h4>
+              <p>Experimental</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cinematography -->
+      <div class="creative-category reveal">
+        <div class="category-header">
+          <h3>Cinematography</h3>
+          <span>Cinematic Vision</span>
+        </div>
+        <div class="gallery gallery-3">
+          <div class="gallery-item wide" style="grid-column: span 2;">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">🎥</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Widescreen Narrative</h4>
+              <p>Cinematic Storytelling</p>
+            </div>
+          </div>
+          <div class="gallery-item tall">
+            <div class="gallery-item-inner">
+              <div class="gallery-placeholder-icon">🎥</div>
+            </div>
+            <div class="gallery-overlay">
+              <h4>Behind the Lens</h4>
+              <p>Production Stills</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Interests ===== -->
+  <section class="interests" id="interests">
+    <div class="container">
+      <div class="section-divider reveal"></div>
+      <p class="section-label reveal">Interests</p>
+      <h2 class="section-title reveal reveal-delay-1">Beyond the screen<br />& the shutter.</h2>
+      <div class="interests-grid">
+        <div class="interest-card reveal reveal-delay-1">
+          <div class="interest-icon">🎮</div>
+          <h3>Gaming</h3>
+          <p>Immersive worlds, strategic thinking, and competitive play — gaming sharpens my reflexes and fuels my appreciation for interactive storytelling and design systems.</p>
+        </div>
+        <div class="interest-card reveal reveal-delay-2">
+          <div class="interest-icon">✦</div>
+          <h3>Creative Exploration</h3>
+          <p>Always experimenting at the edges of art and technology — from visual effects to new mediums, I'm drawn to the unknown and the unexplored.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-divider reveal"></div>
+      <p class="section-label reveal">Get in Touch</p>
+      <h2 class="section-title reveal reveal-delay-1">Let's connect.</h2>
+      <p class="contact-text reveal reveal-delay-2">Whether it's a creative collaboration, a tech discussion, or just a conversation — I'd love to hear from you.</p>
+      <div class="contact-links reveal reveal-delay-3">
+        <a href="mailto:shresht@example.com" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          Email
+        </a>
+        <a href="#" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="#" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          Instagram
+        </a>
+        <a href="#" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">
+      <p class="footer-name">Shresht Jain</p>
+      <p>© 2026 — Designed with precision & passion.</p>
+    </div>
+  </footer>
+
+  <!-- ===== JavaScript ===== -->
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    function closeMenu() {
+      menuToggle.classList.remove('active');
+      navLinks.classList.remove('open');
+    }
+
+    // Intersection Observer for scroll reveals
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+    revealElements.forEach(el => observer.observe(el));
+
+    // Smooth scroll for anchor links (fallback)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
