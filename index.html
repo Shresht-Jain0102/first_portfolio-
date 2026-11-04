@@ -6,7 +6,7 @@
   <title>Shresht Jain — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <style>
     /* ===== Reset & Base ===== */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -328,6 +328,12 @@
       font-weight: 400;
       display: block;
       position: relative;
+    }
+    .hero h1 .hero-j {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: .01em;
     }
     /* Glint / shimmer on name */
     .hero h1 .name-shimmer {
@@ -1071,7 +1077,7 @@
       <p class="hero-label hero-el hero-el-delay-1">Student · Creator · Explorer</p>
       <h1 class="hero-el hero-el-delay-2">
         <span class="name-shimmer">Shresht</span><br />
-        <em>Jain</em>
+        <em><span class="hero-j">J</span>ain</em>
       </h1>
       <p class="hero-tagline hero-el hero-el-delay-3">
         First-year student at NST, Rishihood University — navigating the intersection of technology, visual storytelling, and creative expression.
@@ -1243,7 +1249,8 @@
         <div class="gallery gallery-1-2">
           <div class="gallery-item tall">
             <div class="gallery-item-inner">
-              <div class="gallery-placeholder-icon">🎬</div>
+              <div class="gallery-placeholder-icon"></div>
+              <video src="static_rain.mp4" autoplay muted loop></video>
             </div>
             <div class="gallery-overlay">
               <h4>Vertical Reel</h4>
@@ -1252,7 +1259,8 @@
           </div>
           <div class="gallery-item wide">
             <div class="gallery-item-inner">
-              <div class="gallery-placeholder-icon">🎬</div>
+              <div class="gallery-placeholder-icon"></div>
+              <video src="aarti_video.mp4" autoplay muted loop></video>
             </div>
             <div class="gallery-overlay">
               <h4>Motion Study</h4>
@@ -1271,7 +1279,8 @@
         <div class="gallery gallery-3">
           <div class="gallery-item wide" style="grid-column: span 2;">
             <div class="gallery-item-inner">
-              <div class="gallery-placeholder-icon">🎥</div>
+              <div class="gallery-placeholder-icon"></div>
+              <video src="golden_sky.mp4" autoplay muted loop></video>
             </div>
             <div class="gallery-overlay">
               <h4>Widescreen Narrative</h4>
@@ -1280,7 +1289,8 @@
           </div>
           <div class="gallery-item tall">
             <div class="gallery-item-inner">
-              <div class="gallery-placeholder-icon">🎥</div>
+              <div class="gallery-placeholder-icon"></div>
+              <video src="hth.mp4" autoplay muted loop></video>
             </div>
             <div class="gallery-overlay">
               <h4>Behind the Lens</h4>
