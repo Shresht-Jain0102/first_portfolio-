@@ -247,21 +247,33 @@
       100% { top: 102%; }
     }
 
-    /* Mouse glow — follows cursor */
-    .hero-mouse-glow {
-      position: absolute;
-      width: 500px;
-      height: 500px;
+    /* ===== Global Cursor-Following Glow ===== */
+    .cursor-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 550px;
+      height: 550px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,.06) 0%, transparent 70%);
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.055) 0%,
+        rgba(255, 255, 255, 0.02) 35%,
+        rgba(255, 255, 255, 0.005) 55%,
+        transparent 70%
+      );
       pointer-events: none;
-      z-index: 3;
-      transform: translate(-50%, -50%);
-      transition: opacity .4s ease;
-      will-change: left, top;
+      z-index: 99;
+      transform: translate3d(-1000px, -1000px, 0) translate(-50%, -50%);
+      transition: opacity 0.5s var(--ease);
       opacity: 0;
+      will-change: transform, opacity;
     }
-    .hero:hover .hero-mouse-glow { opacity: 1; }
+    @media (hover: none) and (pointer: coarse) {
+      .cursor-glow {
+        display: none !important;
+      }
+    }
 
     /* Main content container with parallax */
     .hero-content {
@@ -617,6 +629,9 @@
     section {
       padding: 8rem 0;
       position: relative;
+    }
+    section:not(.hero) .container {
+      will-change: transform, opacity, filter;
     }
     .section-divider {
       width: 60px;
@@ -1002,6 +1017,9 @@
 </head>
 <body>
 
+  <!-- ===== Global Cursor-Following Ambient Glow ===== -->
+  <div class="cursor-glow" id="mouseGlow"></div>
+
   <!-- ===== Navigation ===== -->
   <nav id="navbar">
     <div class="container">
@@ -1037,9 +1055,6 @@
 
     <!-- Scan line -->
     <div class="hero-scan-line"></div>
-
-    <!-- Mouse-following glow -->
-    <div class="hero-mouse-glow" id="mouseGlow"></div>
 
     <!-- Floating glassmorphic panels -->
     <div class="glass-panel glass-panel-1" data-speed="0.03" data-float="true">
@@ -1483,7 +1498,7 @@
     }
 
     /* ──────────────────────────────────────────────
-       2. MOUSE TRACKING — Glow + Parallax + Particles
+       2. MOUSE TRACKING — Global Glow + Parallax + Particles
        ────────────────────────────────────────────── */
     const hero = document.getElementById('hero');
     const mouseGlow = document.getElementById('mouseGlow');
@@ -1493,19 +1508,41 @@
     let targetMouseX = 0, targetMouseY = 0;
     let smoothMouseX = 0, smoothMouseY = 0;
 
+    // Smooth global cursor glow coordinates
+    let targetGlowX = -1000, targetGlowY = -1000;
+    let currentGlowX = -1000, currentGlowY = -1000;
+    let isGlowVisible = false;
+
+    // Global cursor tracking across the entire website
+    window.addEventListener('mousemove', (e) => {
+      targetGlowX = e.clientX;
+      targetGlowY = e.clientY;
+
+      if (!isGlowVisible) {
+        if (currentGlowX === -1000) {
+          currentGlowX = targetGlowX;
+          currentGlowY = targetGlowY;
+        }
+        if (mouseGlow) mouseGlow.style.opacity = '1';
+        isGlowVisible = true;
+      }
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => {
+      if (mouseGlow) mouseGlow.style.opacity = '0';
+      isGlowVisible = false;
+    });
+
+    // Hero-specific particle repulsion & parallax tracking
     hero.addEventListener('mousemove', (e) => {
       const rect = hero.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
 
-      // Mouse glow
-      mouseGlow.style.left = mouse.x + 'px';
-      mouseGlow.style.top = mouse.y + 'px';
-
       // Normalized coords for parallax (-1 to 1)
       targetMouseX = (mouse.x / canvasW - 0.5) * 2;
       targetMouseY = (mouse.y / canvasH - 0.5) * 2;
-    });
+    }, { passive: true });
 
     hero.addEventListener('mouseleave', () => {
       mouse.x = -1000;
@@ -1514,7 +1551,7 @@
       targetMouseY = 0;
     });
 
-    // Smooth parallax loop
+    // Smooth animation frame loop for parallax & cursor glow
     function updateParallax() {
       smoothMouseX += (targetMouseX - smoothMouseX) * 0.06;
       smoothMouseY += (targetMouseY - smoothMouseY) * 0.06;
@@ -1539,12 +1576,81 @@
           `translate3d(${shiftX}px, ${shiftY}px, 0) ${baseTransform}`;
       });
 
+      // Smooth cursor-following glow interpolation (60/120fps hardware-accelerated)
+      if (mouseGlow && isGlowVisible) {
+        currentGlowX += (targetGlowX - currentGlowX) * 0.15;
+        currentGlowY += (targetGlowY - currentGlowY) * 0.15;
+        mouseGlow.style.transform =
+          `translate3d(${currentGlowX.toFixed(1)}px, ${currentGlowY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      }
+
       requestAnimationFrame(updateParallax);
     }
 
     /* ──────────────────────────────────────────────
-       3. SCROLL-LINKED HERO TRANSFORM
+       3. SCROLL-LINKED HERO & SECTION TRANSFORMS
        ────────────────────────────────────────────── */
+    const scrollSections = document.querySelectorAll('section:not(#hero)');
+
+    function handleSectionScrolls() {
+      const winH = window.innerHeight;
+
+      scrollSections.forEach(section => {
+        const container = section.querySelector('.container');
+        if (!container) return;
+
+        const rect = section.getBoundingClientRect();
+        const secH = rect.height;
+
+        // Exit zone (leaving through the top as user scrolls down past the section)
+        const exitStart = Math.min(winH * 0.55, secH * 0.55);
+        const exitEnd = 0;
+
+        // Entrance zone (entering from bottom or leaving through bottom when scrolling up)
+        const enterStart = winH;
+        const enterEnd = winH * 0.8;
+
+        let opacity = 1;
+        let translateY = 0;
+        let blur = 0;
+
+        if (rect.bottom < exitStart) {
+          // Leaving through the top
+          if (rect.bottom <= exitEnd) {
+            opacity = 0;
+            translateY = -35;
+            blur = 5;
+          } else {
+            const progress = (exitStart - rect.bottom) / (exitStart - exitEnd);
+            opacity = Math.max(0, 1 - progress);
+            translateY = -35 * progress;
+            blur = 5 * progress;
+          }
+        } else if (rect.top > enterEnd) {
+          // Entering from bottom / leaving through bottom
+          if (rect.top >= enterStart) {
+            opacity = 0;
+            translateY = 35;
+            blur = 5;
+          } else {
+            const progress = (rect.top - enterEnd) / (enterStart - enterEnd);
+            opacity = Math.max(0, 1 - progress);
+            translateY = 35 * progress;
+            blur = 5 * progress;
+          }
+        } else {
+          // Fully in active viewing viewport
+          opacity = 1;
+          translateY = 0;
+          blur = 0;
+        }
+
+        container.style.opacity = opacity;
+        container.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
+        container.style.filter = blur > 0.1 ? `blur(${blur.toFixed(1)}px)` : 'none';
+      });
+    }
+
     function handleHeroScroll() {
       const scrollY = window.scrollY;
       const heroH = hero.offsetHeight;
@@ -1566,7 +1672,23 @@
       });
     }
 
-    window.addEventListener('scroll', handleHeroScroll, { passive: true });
+    // High performance RAF scroll loop
+    let scrollTicking = false;
+    function onScroll() {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          handleHeroScroll();
+          handleSectionScrolls();
+          if (navbar) {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+          }
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     /* ──────────────────────────────────────────────
        4. LIFTOFF ENTRANCE SEQUENCE
@@ -1610,9 +1732,6 @@
        6. NAVIGATION
        ────────────────────────────────────────────── */
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
 
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
@@ -1645,11 +1764,15 @@
       animateParticles();
       updateParallax();
       triggerLiftoff();
+      handleHeroScroll();
+      handleSectionScrolls();
     }
 
     window.addEventListener('resize', () => {
       resizeCanvas();
       initParticles();
+      handleHeroScroll();
+      handleSectionScrolls();
     });
 
     // Start everything
